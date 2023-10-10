@@ -252,7 +252,7 @@ os_install_package() {
         Debian)
             DEBIAN_FRONTEND=noninteractive apt-get -qq install -y "$pkg" > /dev/null
             ;;
-        Ubuntu)
+        Ubuntu|LinuxMint)
             DEBIAN_FRONTEND=noninteractive apt-get -qq install -y "$pkg" > /dev/null
             ;;
         *)
@@ -437,9 +437,9 @@ cs_uninstall=$(
 )
 
 os_name=$(
-    # returns either: Amazon, Ubuntu, CentOS, RHEL, or SLES
+    # returns either: Amazon, Ubuntu, LinuxMint, CentOS, RHEL, or SLES
     # lsb_release is not always present
-    name=$(cat /etc/*release | grep ^NAME= | awk -F'=' '{ print $2 }' | sed "s/\"//g;s/Red Hat.*/RHEL/g;s/ Linux$//g;s/ GNU\/Linux$//g;s/Oracle.*/Oracle/g;s/Amazon.*/Amazon/g")
+    name=$(cat /etc/*release | grep ^NAME= | awk -F'=' '{ print $2 }' | sed "s/\"//g;s/Red Hat.*/RHEL/g;s/ Linux$//g;s/ GNU\/Linux$//g;s/Oracle.*/Oracle/g;s/Amazon.*/Amazon/g;s/Linux Mint.*/LinuxMint/g")
     if [ -z "$name" ]; then
         if lsb_release -s -i | grep -q ^RedHat; then
             name="RHEL"
@@ -485,7 +485,7 @@ cs_os_name=$(
             echo "Debian";;
         SLES)
             echo "SLES";;
-        Ubuntu)
+        Ubuntu|LinuxMint)
             echo "Ubuntu";;
         *)
             die "Unrecognized OS: ${os_name}";;
